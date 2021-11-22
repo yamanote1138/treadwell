@@ -11,6 +11,7 @@
 char wifi_ssid[] = WIFI_SSID;
 char wifi_pass[] = WIFI_PASS;
 char mdns_hostname[] = MDNS_HOSTNAME;
+int led = D4;
 
 // instantiate web server
 ESP8266WebServer server(80);
@@ -23,12 +24,16 @@ void setup() {
   
   Serial.begin(115200);
   delay(10);
-  
+
+  // setup onboard LED and turn it off (note: setting it to 'HIGH', turns it off)
+  pinMode(led, OUTPUT);
+  digitalWrite(led, HIGH);
+
   // File System Init
   SPIFFS.begin();
   
   // connect to wifi
-  Serial.printf("connecting to %s", wifi_ssid);
+  Serial.printf("\nconnecting to %s\n", wifi_ssid);
   WiFi.begin(wifi_ssid, wifi_pass);
 
   while (WiFi.status() != WL_CONNECTED) {
@@ -36,17 +41,17 @@ void setup() {
     Serial.print(".");
   }
 
-  Serial.printf("connected with IP address of %s", WiFi.localIP());
+  Serial.printf("\nconnected with IP address of %s\n", WiFi.localIP());
   
   // Start mDNS with name configured hostname
-  if (MDNS.begin(mdns_hostname)) Serial.printf("mDNS started for %s.local", mdns_hostname);
+  if (MDNS.begin(mdns_hostname)) Serial.printf("\nmDNS started for %s.local\n", mdns_hostname);
 
   // configure web server to serve static html/css/img files from SPIFFS root
   server.serveStatic("/", SPIFFS, "/", "max-age=86400");
 
   // start web server
   server.begin();
-  Serial.println("web server started");
+  Serial.println("\nweb server started\n");
 
   webSocket.onEvent(webSocketEventHandler);
   webSocket.begin();
@@ -55,32 +60,25 @@ void setup() {
 void webSocketEventHandler(uint8_t num, WStype_t type, uint8_t * payload, size_t length) {
   switch(type) {
     case WStype_DISCONNECTED:
-      Serial.printf("Client [%u] Disconnected!\n", num);
+      Serial.printf("\nClient [%u] Disconnected!\n", num);
       break;
     case WStype_CONNECTED:
-      {
-        IPAddress ip = webSocket.remoteIP(num);
-        Serial.printf("[%u] Connected from %d.%d.%d.%d url: %s\n", num, ip[0], ip[1], ip[2], ip[3], payload);
-      
-        // send message to client
-        webSocket.sendTXT(num, "Connected");
-      }
+      Serial.printf("\nClient [%u] Connected!\n", num);
       break;
     case WStype_TEXT:
-      Serial.printf("[%u] get Text: %s\n", num, payload);
-
-      // send message back to client
-      webSocket.sendTXT(num, "message here");
-
-      // send data to all connected clients
-      // webSocket.broadcastTXT("message here");
+      if(payload[0]=='1'){
+        digitalWrite(led, LOW);
+        Serial.println("LED turned on");
+        webSocket.sendTXT(num, "ledOn");
+      }else if(payload[0]=='0'){
+        digitalWrite(led, HIGH);
+        Serial.println("LED turned off");
+        webSocket.sendTXT(num, "ledOff");
+      }else{
+        Serial.printf("\nclient [%u] sent unhandled text: %s\n", num, payload);
+      }
       break;
-    case WStype_BIN:
-      Serial.printf("[%u] get binary length: %u\n", num, length);
-      hexdump(payload, length);
-
-      // send message to client
-      // webSocket.sendBIN(num, payload, length);
+    default:
       break;
   }
 }
