@@ -3,21 +3,11 @@
 var socket = new WebSocket('ws://' + location.hostname + ':81/', ['arduino']);
 
 let btnConnectionStatus = document.getElementById('btnConnectionStatus');
-let btnLED = document.getElementById('btnLED');
 let btnForward = document.getElementById('btnForward');
 let btnLeft = document.getElementById('btnLeft');
 let btnStop = document.getElementById('btnStop');
 let btnRight = document.getElementById('btnRight');
 let btnBackward = document.getElementById('btnBackward');
-
-btnLED.addEventListener('click', function(e){
-  e.preventDefault();
-  if(btnLED.innerHTML=='on'){
-    socket.send('0');
-  }else{
-    socket.send('1');
-  }
-}, false);
 
 btnForward.addEventListener('click', function(e){
   e.preventDefault();
@@ -61,14 +51,6 @@ socket.onerror = function (error) {
 };
 socket.onmessage = function (e) {
   switch(e.data){
-    case 'ledOn':
-      btnLED.className='btn btn-info';
-      btnLED.innerHTML = 'on';
-      break;
-    case 'ledOff':
-      btnLED.className='btn btn-dark';
-      btnLED.innerHTML = 'off';
-      break;
     case 'F':
       console.log('moved forward');
       break;
