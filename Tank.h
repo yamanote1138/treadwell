@@ -22,8 +22,8 @@ class Tank
     void unbrake();
   private:
     int _pinStandby;
-    Motor _leftMotor;
-    Motor _rightMotor;
+    Motor *_leftMotor;
+    Motor *_rightMotor;
 };
 
 #endif

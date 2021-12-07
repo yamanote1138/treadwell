@@ -16,12 +16,12 @@ char mdns_hostname[] = MDNS_HOSTNAME;
 
 // pin aliases
 int pwmA = D1;
-int aIn1 = D2;
-int aIn2 = D3;
+int aIn2 = D2;
+int aIn1 = D3;
 int stby = D4;
-int pwmB = D5;
-int bIn1 = D6;
-int bIn2 = D7;
+int bIn1 = D5;
+int bIn2 = D6;
+int pwmB = D7;
 
 // motor defaults
 int speed = 128; // ~50%

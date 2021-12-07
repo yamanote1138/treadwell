@@ -13,58 +13,58 @@ Tank::Tank(int pinPwmA, int pinAIn1, int pinAIn2, int pinStandby, int pinPwmB, i
   pinMode(_pinStandby, OUTPUT);
   digitalWrite(_pinStandby, LOW);
 
-  Motor _leftMotor(pinPwmA, pinAIn1, pinAIn2, "left");
-  Motor _rightMotor(pinPwmB, pinBIn1, pinBIn2, "right");
-  brake();
-  _leftMotor.stop();
-  _rightMotor.stop();
+  _leftMotor = new Motor(pinPwmA, pinAIn1, pinAIn2, "left");
+  _rightMotor = new Motor(pinPwmB, pinBIn1, pinBIn2, "right");
+  this->brake();
+  _leftMotor->stop();
+  _rightMotor->stop();
 }
 
 void Tank::forward(int speed, int duration)
 {
-  brake();
-  _leftMotor.forward(speed);
-  _rightMotor.forward(speed);
-  unbrake();
+  this->brake();
+  _leftMotor->forward(speed);
+  _rightMotor->forward(speed);
+  this->unbrake();
   delay(duration);
-  brake();
+  this->brake();
 }
 
 void Tank::reverse(int speed, int duration)
 {
-  brake();
-  _leftMotor.reverse(speed);
-  _rightMotor.reverse(speed);
-  unbrake();
+  this->brake();
+  _leftMotor->reverse(speed);
+  _rightMotor->reverse(speed);
+  this->unbrake();
   delay(duration);
-  brake();
+  this->brake();
 }
 
 void Tank::left(int speed, int duration)
 {
-  brake();
-  _leftMotor.reverse(speed);
-  _rightMotor.forward(speed);
-  unbrake();
+  this->brake();
+  _leftMotor->reverse(speed);
+  _rightMotor->forward(speed);
+  this->unbrake();
   delay(duration);
-  brake();
+  this->brake();
 }
 
 void Tank::right(int speed, int duration)
 {
-  brake();
-  _leftMotor.forward(speed);
-  _rightMotor.reverse(speed);
-  unbrake();
+  this->brake();
+  _leftMotor->forward(speed);
+  _rightMotor->reverse(speed);
+  this->unbrake();
   delay(duration);
-  brake();
+  this->brake();
 }
 
 void Tank::stop()
 {
-  brake();
-  _leftMotor.stop();
-  _rightMotor.stop();
+  this->brake();
+  _leftMotor->stop();
+  _rightMotor->stop();
 }
 
 void Tank::brake()

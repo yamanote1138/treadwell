@@ -7,11 +7,6 @@
 #include "Arduino.h"
 #include "Motor.h"
 
-Motor::Motor()
-{
-  // bogus default constructor to satisfy compiler... sigh
-}
-
 Motor::Motor(int pinPwm, int pinIn1, int pinIn2, char* name)
 {
   pinMode(pinPwm, OUTPUT);
