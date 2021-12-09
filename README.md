@@ -1,6 +1,6 @@
 # Treadwell
 
-![silly little tank](https://raw.githubusercontent.com/yamanote1139/treadwell/main/resources/treadwell.jpg)
+![silly little tank](https://raw.githubusercontent.com/yamanote1138/treadwell/main/resources/treadwell.jpg)
 Simple tank robot with ESP8266 and WebSockets :)
 
 ## Introduction
